@@ -1,7 +1,0 @@
-
-psycopg2>=2.9.10
-kafka-python>=2.2.3
-pyspark >= 3.5.5
-numpy>=2.0.2
-pandas>=2.2.3
-vnstock>=0.2.9.2.3
