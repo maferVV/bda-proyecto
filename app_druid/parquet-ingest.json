@@ -1,0 +1,56 @@
+{
+  "type": "index_parallel",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "nyc_taxi",
+      "timestampSpec": {
+        "column": "tpep_pickup_datetime",
+        "format": "auto"
+      },
+      "dimensionsSpec": {
+        "dimensions": [
+          "VendorID",
+          "passenger_count",
+          "trip_distance",
+          "RatecodeID",
+          "store_and_fwd_flag",
+          "PULocationID",
+          "DOLocationID",
+          "payment_type"
+        ]
+      },
+      "metricsSpec": [
+        { "type": "doubleSum", "name": "fare_amount", "fieldName": "fare_amount" },
+        { "type": "doubleSum", "name": "extra", "fieldName": "extra" },
+        { "type": "doubleSum", "name": "mta_tax", "fieldName": "mta_tax" },
+        { "type": "doubleSum", "name": "tip_amount", "fieldName": "tip_amount" },
+        { "type": "doubleSum", "name": "tolls_amount", "fieldName": "tolls_amount" },
+        { "type": "doubleSum", "name": "improvement_surcharge", "fieldName": "improvement_surcharge" },
+        { "type": "doubleSum", "name": "total_amount", "fieldName": "total_amount" },
+        { "type": "doubleSum", "name": "congestion_surcharge", "fieldName": "congestion_surcharge" },
+        { "type": "doubleSum", "name": "Airport_fee", "fieldName": "Airport_fee" },
+        { "type": "doubleSum", "name": "cbd_congestion_fee", "fieldName": "cbd_congestion_fee" }
+      ],
+      "granularitySpec": {
+        "type": "uniform",
+        "segmentGranularity": "DAY",
+        "queryGranularity": "HOUR",
+        "rollup": true
+      }
+    },
+    "ioConfig": {
+      "type": "index_parallel",
+      "inputSource": {
+        "type": "local",
+        "baseDir": "/opt/parquets/",
+        "filter": "*.parquet"
+      },
+      "inputFormat": {
+        "type": "parquet"
+      }
+    },
+    "tuningConfig": {
+      "type": "index_parallel"
+    }
+  }
+}
