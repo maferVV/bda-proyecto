@@ -1,6 +1,6 @@
 services:
   superset:
-    build: /superset
+    build: /superset_app
     image: my_superset_with_pillow
     container_name: superset
     ports:
@@ -15,7 +15,7 @@ services:
       SUPERSET_FIRSTNAME: Superset
       SUPERSET_LASTNAME: Admin
     volumes:
-      - ./superset/app/superset_config.py:/app/pythonpath/superset_config.py
+      - ./superset_app/app/superset_config.py:/app/pythonpath/superset_config.py
       - superset_home:/app/superset_home
     command: >
       /bin/sh -c "
@@ -24,6 +24,7 @@ services:
         superset init &&
         superset run -h 0.0.0.0 -p 8088
       "
+
 
 volumes:
   superset_home:
