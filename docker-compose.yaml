@@ -43,5 +43,121 @@ services:
     networks:
       - localnet
 
+  services:
+  postgres:
+    image: postgres:17.5-alpine3.22
+    container_name: postgres
+    env_file: ./app_postgres/postgres.env
+    volumes:
+      - ./app_postgres/db_data:/var/lib/postgresql/data:Z
+    ports:
+      - "5432:5432"
+    networks:
+      - localnet
+
+  zookeeper:
+    container_name: zookeeper
+    image: zookeeper:3.9
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOO_MY_ID=1
+    networks:
+      - localnet
+
+  coordinator:
+    image: apache/druid:33.0.0
+    container_name: coordinator
+    volumes:
+      - ./app_druid/druid_shared:/opt/shared
+      - ./app_druid/coordinator/coordinator_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+    ports:
+      - "8081:8081"
+    command:
+      - coordinator
+    env_file:
+      - ./app_druid/druid.env
+    networks:
+      - localnet
+
+  broker:
+    image: apache/druid:33.0.0
+    container_name: broker
+    volumes:
+      - ./app_druid/broker/broker_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8082:8082"
+    command:
+      - broker
+    env_file:
+      - ./app_druid/druid.env
+    networks:
+      - localnet
+
+  historical:
+    image: apache/druid:33.0.0
+    container_name: historical
+    volumes:
+      - ./app_druid/druid_shared:/opt/shared
+      - ./app_druid/historical/historical_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8083:8083"
+    command:
+      - historical
+    env_file:
+      - ./app_druid/druid.env
+    networks:
+      - localnet
+
+  middlemanager:
+    image: apache/druid:33.0.0
+    container_name: middlemanager
+    volumes:
+      - ./app_druid/druid_shared:/opt/shared
+      - ./app_druid/middlemanager/middle_var:/opt/druid/var
+      - ./app_spark/output:/opt/data/parquet
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8091:8091"
+      - "8100-8105:8100-8105"
+    command:
+      - middleManager
+    env_file:
+      - ./app_druid/druid.env
+    networks:
+      - localnet
+
+  router:
+    image: apache/druid:33.0.0
+    container_name: router
+    volumes:
+      - ./app_druid/router/router_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8888:8888"
+    command:
+      - router
+    env_file:
+      - ./app_druid/druid.env
+    networks:
+      - localnet
+
 networks:
   localnet:
