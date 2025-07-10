@@ -1,5 +1,4 @@
 volumes:
-  # metadata_data: {}
   middle_var: {}
   historical_var: {}
   broker_var: {}
@@ -9,28 +8,40 @@ volumes:
 
 services:
   spark:
-    build:
-      context: ./app_spark  # Specify the context for the build
+    image: docker.io/bitnami/spark:3.3
     container_name: spark
     environment:
       - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
     ports:
       - "7077:7077"
       - "8080:8080"
     volumes:
-      - ./app_spark/:/app/ 
-      - druid_shared:/app/druid_shared  # Mount the druid_shared volume
+      - ./app_spark/:/opt/spark-app
+      - ./app_spark/data:/app/data
+    user: root
+    command: >
+      bash -c "spark-submit --master local[*] /opt/spark-app/etl_script.py"
+    networks:
+      - localnet
 
-  # Spark Worker
   worker:
-    image: apache/spark:3.5.1
+    image: docker.io/bitnami/spark:3.3
     container_name: worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
     depends_on:
       - spark
-    command: >
-      /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077
     ports:
       - "8084:8084"
     volumes:
-      - ./app_spark/:/app/ 
-      - druid_shared:/app/druid_shared  # Mount the druid_shared volume
+      - ./app_spark:/opt/spark-app
+    networks:
+      - localnet
+
+networks:
+  localnet:
