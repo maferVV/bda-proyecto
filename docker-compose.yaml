@@ -1,36 +1,29 @@
-volumes:
-  # metadata_data: {}
-  middle_var: {}
-  historical_var: {}
-  broker_var: {}
-  coordinator_var: {}
-  router_var: {}
-  druid_shared: {}
-
 services:
-  spark:
-    build:
-      context: ./app_spark  # Specify the context for the build
-    container_name: spark
+  superset:
+    build: /superset
+    image: my_superset_with_pillow
+    container_name: superset
+    ports:
+      - "8088:8088"
     environment:
-      - SPARK_MODE=master
-    ports:
-      - "7077:7077"
-      - "8080:8080"
+      SUPERSET_ENV: production
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      SUPERSET_LOAD_EXAMPLES: "no"
+      SUPERSET_USERNAME: admin
+      SUPERSET_PASSWORD: admin
+      SUPERSET_EMAIL: admin@superset.com
+      SUPERSET_FIRSTNAME: Superset
+      SUPERSET_LASTNAME: Admin
     volumes:
-      - ./app_spark/:/app/ 
-      - druid_shared:/app/druid_shared  # Mount the druid_shared volume
-
-  # Spark Worker
-  worker:
-    image: apache/spark:3.5.1
-    container_name: worker
-    depends_on:
-      - spark
+      - ./superset/app/superset_config.py:/app/pythonpath/superset_config.py
+      - superset_home:/app/superset_home
     command: >
-      /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark:7077
-    ports:
-      - "8084:8084"
-    volumes:
-      - ./app_spark/:/app/ 
-      - druid_shared:/app/druid_shared  # Mount the druid_shared volume
+      /bin/sh -c "
+        superset db upgrade &&
+        superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin &&
+        superset init &&
+        superset run -h 0.0.0.0 -p 8088
+      "
+
+volumes:
+  superset_home:
