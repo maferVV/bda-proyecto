@@ -27,3 +27,5 @@ spark-submit /app/scripts/hello_world.py
 
 #etl script
 spark-submit /app/scripts/etl_script.py
+## confirm output
+ls -l /app/druid_shared

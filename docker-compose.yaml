@@ -9,7 +9,8 @@ volumes:
 
 services:
   spark:
-    image: docker.io/bitnami/spark:3.3
+    build:
+      context: ./app_spark  # Specify the context for the build
     container_name: spark
     environment:
       - SPARK_MODE=master
@@ -27,6 +28,8 @@ services:
   # Spark Worker
   worker:
     image: docker.io/bitnami/spark:3.3
+    #build:
+    #  context: ./app_spark  # Specify the context for the build
     container_name: worker
     environment:
       - SPARK_MODE=worker
@@ -35,3 +38,6 @@ services:
       - spark
     ports:
       - "8084:8084"
+    volumes:
+      - ./app_spark/:/app/ 
+      - druid_shared:/app/druid_shared  # Mount the druid_shared volume
