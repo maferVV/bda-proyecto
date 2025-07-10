@@ -1,13 +1,13 @@
-FROM docker.io/bitnami/spark:3.3
+FROM apache/spark:3.5.1
 
-# Switch to root user to create a new user
-USER root
+WORKDIR /app
 
-# Create a new user with UID 1000
-#RUN useradd -u 1000 -m sparkuser
+COPY scripts/ ./scripts
+COPY data/ ./data
 
-# Switch back to the new user
-#USER sparkuser
+ENV PATH="/opt/spark/bin:${PATH}"
 
-# Set the working directory
-#WORKDIR /app
+EXPOSE 7077 8080
+
+CMD ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
+
