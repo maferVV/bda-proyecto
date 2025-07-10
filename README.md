@@ -26,7 +26,10 @@ http://localhost:8080/
 spark-submit /app/scripts/hello_world.py
 
 #etl script
-spark-submit /app/scripts/etl_csv.py
+spark-submit /app/scripts/etl_csv.py > /tmp/output.log 2>&1
+## read output
+cat /tmp/output.log | grep "Number"
+
 ## confirm output
 ls -l /app/druid_shared
 

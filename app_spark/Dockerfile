@@ -9,5 +9,7 @@ ENV PATH="/opt/spark/bin:${PATH}"
 
 EXPOSE 7077 8080
 
+USER root
+
 CMD ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
 
