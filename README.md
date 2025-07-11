@@ -34,7 +34,10 @@ cat /tmp/output.log | grep "Number"
 ls -l /app/druid_shared
 
 
-
+# druid ingest parquet 
+curl -X POST http://localhost:8081/druid/indexer/v1/task \
+  -H "Content-Type: application/json" \
+  -d @app_druid/parquet_ingest.json
 
 
 
