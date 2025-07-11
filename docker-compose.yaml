@@ -10,12 +10,8 @@ services:
   spark:
     image: docker.io/bitnami/spark:3.3
     container_name: spark
-    environment:
-      - SPARK_MODE=master
-      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-      - SPARK_RPC_ENCRYPTION_ENABLED=no
-      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-      - SPARK_SSL_ENABLED=no
+    env_file:
+      - ./app_spark/spark.env
     ports:
       - "7077:7077"
       - "8080:8080"
@@ -25,21 +21,6 @@ services:
     user: root
     command: >
       bash -c "spark-submit --master local[*] /opt/spark-app/etl_script.py"
-    networks:
-      - localnet
-
-  worker:
-    image: docker.io/bitnami/spark:3.3
-    container_name: worker
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark:7077
-    depends_on:
-      - spark
-    ports:
-      - "8084:8084"
-    volumes:
-      - ./app_spark:/opt/spark-app
     networks:
       - localnet
 
