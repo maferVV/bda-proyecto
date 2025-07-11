@@ -30,7 +30,7 @@ services:
     container_name: postgres
     env_file: ./app_postgres/postgres.env
     volumes:
-      - ./app_postgres/db_data:/var/lib/postgresql/data:Z
+      - ./app_postgres/db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
