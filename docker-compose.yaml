@@ -6,6 +6,7 @@ volumes:
   router_var: {}
   druid_shared: {}
 
+
 services:
   spark:
     image: docker.io/bitnami/spark:3.3
