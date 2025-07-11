@@ -1,19 +1,12 @@
 services:
   superset:
-    build: /superset_app
-    image: my_superset_with_pillow
+    build: ./superset_app
+    image: superset_actualizado
     container_name: superset
     ports:
       - "8088:8088"
-    environment:
-      SUPERSET_ENV: production
-      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
-      SUPERSET_LOAD_EXAMPLES: "no"
-      SUPERSET_USERNAME: admin
-      SUPERSET_PASSWORD: admin
-      SUPERSET_EMAIL: admin@superset.com
-      SUPERSET_FIRSTNAME: Superset
-      SUPERSET_LASTNAME: Admin
+    env_file:
+      - ./superset_app/superset.env
     volumes:
       - ./superset_app/app/superset_config.py:/app/pythonpath/superset_config.py
       - superset_home:/app/superset_home
