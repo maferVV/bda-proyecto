@@ -43,7 +43,7 @@ services:
     networks:
       - localnet
 
-  services:
+
   postgres:
     image: postgres:17.5-alpine3.22
     container_name: postgres
@@ -67,6 +67,7 @@ services:
 
   coordinator:
     image: apache/druid:33.0.0
+    user: root
     container_name: coordinator
     volumes:
       - ./app_druid/druid_shared:/opt/shared
@@ -85,6 +86,7 @@ services:
 
   broker:
     image: apache/druid:33.0.0
+    user: root
     container_name: broker
     volumes:
       - ./app_druid/broker/broker_var:/opt/druid/var
@@ -103,6 +105,7 @@ services:
 
   historical:
     image: apache/druid:33.0.0
+    user: root
     container_name: historical
     volumes:
       - ./app_druid/druid_shared:/opt/shared
@@ -122,6 +125,7 @@ services:
 
   middlemanager:
     image: apache/druid:33.0.0
+    user: root
     container_name: middlemanager
     volumes:
       - ./app_druid/druid_shared:/opt/shared
@@ -143,6 +147,7 @@ services:
 
   router:
     image: apache/druid:33.0.0
+    user: root
     container_name: router
     volumes:
       - ./app_druid/router/router_var:/opt/druid/var
@@ -161,3 +166,4 @@ services:
 
 networks:
   localnet:
+
