@@ -42,7 +42,7 @@
       "type": "index_parallel",
       "inputSource": {
         "type": "local",
-        "baseDir": "/opt/parquets/",
+        "baseDir": "/opt/data/parquet",
         "filter": "*.parquet"
       },
       "inputFormat": {
