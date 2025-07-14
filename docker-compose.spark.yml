@@ -1,0 +1,15 @@
+services:
+  spark:
+    image: docker.io/bitnami/spark:3.3
+    container_name: spark
+    user: root
+    env_file:
+      - ./app_spark/spark.env
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    volumes:
+      - ./app_spark/:/opt/spark-app
+      - ./data:/app/data
+    command: >
+      bash -c "spark-submit --master local[*] /opt/spark-app/etl_script.py"
