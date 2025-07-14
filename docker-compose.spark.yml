@@ -10,6 +10,6 @@ services:
       - "8080:8080"
     volumes:
       - ./app_spark/:/opt/spark-app
-      - ./data:/app/data
+      - ./app_spark_data:/app/data
     command: >
       bash -c "spark-submit --master local[*] /opt/spark-app/etl_script.py"
