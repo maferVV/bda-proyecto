@@ -7,6 +7,15 @@
         "column": "tpep_pickup_datetime",
         "format": "auto"
       },
+      "transformSpec": {
+        "transforms": [
+          {
+            "type": "expression",
+            "name": "tpep_dropoff_parsed",
+            "expression": "timestamp_parse(tpep_dropoff_datetime, 'yyyy-MM-dd HH:mm:ss', 'UTC')"
+          }
+        ]
+      },
       "dimensionsSpec": {
         "dimensions": [
           "VendorID",
@@ -16,7 +25,8 @@
           "store_and_fwd_flag",
           "PULocationID",
           "DOLocationID",
-          "payment_type"
+          "payment_type",
+          "tpep_dropoff_parsed"
         ]
       },
       "metricsSpec": [
