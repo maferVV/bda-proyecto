@@ -6,26 +6,7 @@ volumes:
   router_var: {}
   druid_shared: {}
 
-
 services:
-  spark:
-    image: docker.io/bitnami/spark:3.3
-    container_name: spark
-    env_file:
-      - ./app_spark/spark.env
-    ports:
-      - "7077:7077"
-      - "8080:8080"
-    volumes:
-      - ./app_spark/:/opt/spark-app
-      - ./app_spark/data:/app/data
-    user: root
-    command: >
-      bash -c "spark-submit --master local[*] /opt/spark-app/etl_script.py"
-    networks:
-      - localnet
-
-
   postgres:
     image: postgres:17.5-alpine3.22
     container_name: postgres
@@ -49,8 +30,8 @@ services:
 
   coordinator:
     image: apache/druid:33.0.0
-    user: root
     container_name: coordinator
+    user: root
     volumes:
       - ./app_druid/druid_shared:/opt/shared
       - ./app_druid/coordinator/coordinator_var:/opt/druid/var
@@ -68,8 +49,8 @@ services:
 
   broker:
     image: apache/druid:33.0.0
-    user: root
     container_name: broker
+    user: root
     volumes:
       - ./app_druid/broker/broker_var:/opt/druid/var
     depends_on:
@@ -87,8 +68,8 @@ services:
 
   historical:
     image: apache/druid:33.0.0
-    user: root
     container_name: historical
+    user: root
     volumes:
       - ./app_druid/druid_shared:/opt/shared
       - ./app_druid/historical/historical_var:/opt/druid/var
@@ -107,8 +88,8 @@ services:
 
   middlemanager:
     image: apache/druid:33.0.0
-    user: root
     container_name: middlemanager
+    user: root
     volumes:
       - ./app_druid/druid_shared:/opt/shared
       - ./app_druid/middlemanager/middle_var:/opt/druid/var
@@ -129,8 +110,8 @@ services:
 
   router:
     image: apache/druid:33.0.0
-    user: root
     container_name: router
+    user: root
     volumes:
       - ./app_druid/router/router_var:/opt/druid/var
     depends_on:
@@ -148,4 +129,3 @@ services:
 
 networks:
   localnet:
-
